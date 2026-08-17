@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CardioNav AI | Early Disease Screening</title>
+  <meta name="description" content="AI Screening Platform for Diabetes, Cardiac Arrest, and Anemia with Real-Time PPG Waveform." />
+
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Clean Responsive Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="app-container">
+
+    <!-- ==================== SIDEBAR (DESKTOP & MOBILE DRAWER) ==================== -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div class="brand-group">
+          <div class="brand-icon">
+            <i data-lucide="activity" style="width: 20px; height: 20px;"></i>
+          </div>
+          <div>
+            <div class="brand-name">CardioNav AI</div>
+            <div class="brand-subtitle">Clinical Screening Suite</div>
+          </div>
+        </div>
+        <button class="mobile-close-btn" id="btnCloseSidebar" aria-label="Close Sidebar">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-item active" data-view="screening">
+          <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i>
+          <span class="nav-text">Screening & Predictions</span>
+        </div>
+
+        <div class="nav-item" data-view="history">
+          <i data-lucide="history" style="width: 18px; height: 18px;"></i>
+          <span class="nav-text">Past Records</span>
+          <span class="nav-badge" id="historyBadge">0</span>
+        </div>
+
+        <div class="nav-item" data-view="hospital">
+          <i data-lucide="building-2" style="width: 18px; height: 18px;"></i>
+          <span class="nav-text">Hospital Integration</span>
+        </div>
+
+        <div class="nav-item" data-view="settings">
+          <i data-lucide="settings" style="width: 18px; height: 18px;"></i>
+          <span class="nav-text">Settings</span>
+        </div>
+
+        <div class="nav-item" data-view="about">
+          <i data-lucide="users" style="width: 18px; height: 18px;"></i>
+          <span class="nav-text">About Us</span>
+        </div>
+
+        <div class="nav-item" data-view="contact">
+          <i data-lucide="phone-call" style="width: 18px; height: 18px;"></i>
+          <span class="nav-text">Contact Us</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Designed & Built by:</div>
+        <div class="team-badge">Team Really Unique</div>
+      </div>
+    </aside>
+
+    <!-- ==================== MAIN VIEWPORT ==================== -->
+    <main class="main-viewport">
+
+      <!-- TOP APP BAR -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <!-- 3 Dashes Hamburger Button for Mobile -->
+          <button class="hamburger-btn" id="btnMobileMenu" aria-label="Open Navigation Menu">
+            <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
+          </button>
+          <h1 class="top-bar-title">Early Disease Screening</h1>
+        </div>
+
+        <div class="top-bar-actions">
+          <div class="backend-status-badge" id="backendStatusBadge" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: rgba(16, 185, 129, 0.1); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.3);">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-emerald);" id="backendStatusDot"></span>
+            <span id="backendStatusText">Checking Backend...</span>
+          </div>
+
+          <button class="btn btn-icon-only-mobile" id="btnThemeToggle" title="Toggle Light / Dark Mode">
+            <i data-lucide="moon" id="themeIcon" style="width: 16px; height: 16px;"></i>
+            <span class="btn-text-desktop" id="themeText">Dark Mode</span>
+          </button>
+          
+          <button class="btn btn-primary btn-icon-only-mobile" id="btnExportSummary" title="Print Summary Report">
+            <i data-lucide="printer" style="width: 16px; height: 16px;"></i>
+            <span class="btn-text-desktop">Print Report</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- DEMO SCENARIO PRESETS -->
+      <section class="demo-strip">
+        <span class="demo-label">Quick Cases:</span>
+        <div class="demo-scroll-wrap">
+          <button class="demo-chip active" data-scenario="cardiac_alert">❤️ Cardiac Arrest</button>
+          <button class="demo-chip" data-scenario="diabetes_case">🩺 Diabetes Risk</button>
+          <button class="demo-chip" data-scenario="anemia_case">🩸 Anemia Risk</button>
+          <button class="demo-chip" data-scenario="normal_case">🟢 Normal Baseline</button>
+        </div>
+      </section>
+
+      <!-- MAIN CONTENT BODY -->
+      <div class="content-body">
+
+        <!-- RESPONSIVE 2-COLUMN / 1-COLUMN SCREENING GRID -->
+        <div class="two-col-grid">
+
+          <!-- LEFT COLUMN: Real-Time Telemetry, Graph & Patient Intake -->
+          <div class="dashboard-col">
+
+            <!-- 1. Real-Time Physiological Telemetry & The Graph -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="heart-pulse" style="width: 19px; height: 19px; color: var(--accent-emerald);"></i>
+                  <h2 class="card-title">Real-Time Physiological Telemetry</h2>
+                </div>
+                <div class="card-header-actions">
+                  <button class="btn btn-sm" id="btnToggleAudio" title="Heartbeat Beep">
+                    <i data-lucide="volume-2" id="audioIcon" style="width: 14px; height: 14px;"></i>
+                  </button>
+                  <button class="btn btn-sm" id="btnToggleStream">
+                    <i data-lucide="pause" id="streamIcon" style="width: 14px; height: 14px;"></i>
+                    <span id="streamText">Pause</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Real-Time Interactive PPG Waveform Graph -->
+              <div class="waveform-box">
+                <canvas id="ppgCanvas"></canvas>
+              </div>
+
+              <!-- 4 Telemetry Metrics Grid -->
+              <div class="metrics-row">
+                <div class="metric-card">
+                  <div class="metric-label">
+                    <span>Heart Rate</span>
+                    <span class="heart-icon" id="heartBeater">❤️</span>
+                  </div>
+                  <div class="metric-val">
+                    <span id="metricBpm">112</span><span class="metric-unit">BPM</span>
+                  </div>
+                </div>
+
+                <div class="metric-card">
+                  <div class="metric-label">HRV (RMSSD)</div>
+                  <div class="metric-val">
+                    <span id="metricHrv">18.5</span><span class="metric-unit">ms</span>
+                  </div>
+                </div>
+
+                <div class="metric-card">
+                  <div class="metric-label">Rhythm Irreg.</div>
+                  <div class="metric-val">
+                    <span id="metricIrregularity">0.78</span>
+                  </div>
+                </div>
+
+                <div class="metric-card">
+                  <div class="metric-label">SpO2 Level</div>
+                  <div class="metric-val">
+                    <span id="metricSpo2">95</span><span class="metric-unit">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Patient Demographics & Clinical Intake Form -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i data-lucide="user" style="width: 19px; height: 19px; color: var(--accent-cyan);"></i>
+                  <h2 class="card-title">Patient Demographics & Intake</h2>
+                </div>
+                <button class="btn btn-sm" id="btnResetForm">Clear Form</button>
+              </div>
+
+              <form id="intakeForm">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label" for="inputName">Patient Name</label>
+                    <input type="text" id="inputName" class="form-input" value="Vikram Sundaram" required />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="inputAge">Age (Years)</label>
+                    <input type="number" id="inputAge" class="form-input" value="54" min="1" max="120" required />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="inputSex">Biological Sex</label>
+                    <select id="inputSex" class="form-select">
+                      <option value="male" selected>Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Blood Pressure (mmHg)</label>
+                    <div style="display: flex; gap: 0.4rem;">
+                      <input type="number" id="inputSys" class="form-input" value="154" placeholder="Sys" style="width: 50%;" />
+                      <input type="number" id="inputDia" class="form-input" value="96" placeholder="Dia" style="width: 50%;" />
+                    </div>
+                  </div>
+
+                  <!-- Biomarkers for Diabetes & Anemia -->
+                  <div class="form-group">
+                    <label class="form-label" for="inputGlucose">Blood Glucose (mg/dL)</label>
+                    <input type="number" id="inputGlucose" class="form-input" value="110" min="40" max="600" />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="inputHemoglobin">Hemoglobin (g/dL)</label>
+                    <input type="number" step="0.1" id="inputHemoglobin" class="form-input" value="14.2" min="3" max="25" />
+                  </div>
+
+                  <!-- Symptoms Multi-Select -->
+                  <div class="form-group col-2">
+                    <label class="form-label">Reported Presenting Symptoms</label>
+                    <div class="tag-list" id="symptomsList">
+                      <!-- Injected dynamically -->
+                    </div>
+                  </div>
+
+                  <!-- Medical History -->
+                  <div class="form-group col-2">
+                    <label class="form-label">Past Medical History</label>
+                    <div class="tag-list" id="historyList">
+                      <!-- Injected dynamically -->
+                    </div>
+                  </div>
+                </div>
+
+                <div style="margin-top: 1.25rem;">
+                  <button type="submit" class="btn btn-primary btn-submit-full" id="btnAnalyze">
+                    <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i>
+                    <span>Analyze Disease Risks & Generate Prediction</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: The 3 Disease Predictions & Hospital Referral -->
+          <div class="dashboard-col">
+
+            <!-- 3. The 3 Disease Risk Predictions -->
+            <div class="disease-predictions-container">
+
+              <!-- PREDICTION 1: DIABETES RISK -->
+              <div class="disease-card risk-LOW" id="diabetesCard">
+                <div class="disease-card-header">
+                  <div class="disease-title-box">
+                    <i data-lucide="droplet" style="width: 18px; height: 18px; color: var(--accent-amber);"></i>
+                    <h3 class="disease-title">1. Diabetes Mellitus Risk</h3>
+                  </div>
+                  <span class="risk-pill LOW" id="diabetesPill">LOW RISK</span>
+                </div>
+
+                <div class="disease-score-row">
+                  <div class="progress-track">
+                    <div class="progress-bar" id="diabetesBar" style="width: 25%; background: var(--accent-emerald);"></div>
+                  </div>
+                  <span class="score-text" id="diabetesScore">25%</span>
+                </div>
+
+                <ul class="evidence-bullet-list" id="diabetesEvidence">
+                  <li>Normoglycemic blood glucose reading (110 mg/dL)</li>
+                </ul>
+
+                <div class="recommendation-box" id="diabetesRec">
+                  <strong>Clinical Action:</strong> Maintain healthy diet and routine screening.
+                </div>
+              </div>
+
+              <!-- PREDICTION 2: CARDIAC DISEASE & CARDIAC ARREST WARNING -->
+              <div class="disease-card risk-HIGH" id="cardiacCard">
+                <div class="disease-card-header">
+                  <div class="disease-title-box">
+                    <i data-lucide="heart-crack" style="width: 18px; height: 18px; color: var(--accent-red);"></i>
+                    <h3 class="disease-title">2. Cardiac Disease & Arrest Warning</h3>
+                  </div>
+                  <span class="risk-pill HIGH" id="cardiacPill">HIGH RISK</span>
+                </div>
+
+                <div class="disease-score-row">
+                  <div class="progress-track">
+                    <div class="progress-bar" id="cardiacBar" style="width: 88%; background: var(--accent-red);"></div>
+                  </div>
+                  <span class="score-text" id="cardiacScore">88%</span>
+                </div>
+
+                <ul class="evidence-bullet-list" id="cardiacEvidence">
+                  <li>Marked pulse rhythm irregularity (78%) indicating arrhythmia</li>
+                  <li>Active chest discomfort / pressure reported</li>
+                </ul>
+
+                <div class="recommendation-box" id="cardiacRec">
+                  <strong>Clinical Action:</strong> Immediate 12-lead ECG telemetry. Urgent evaluation by Cardiology / Emergency Ward.
+                </div>
+              </div>
+
+              <!-- PREDICTION 3: ANEMIA RISK -->
+              <div class="disease-card risk-LOW" id="anemiaCard">
+                <div class="disease-card-header">
+                  <div class="disease-title-box">
+                    <i data-lucide="test-tube" style="width: 18px; height: 18px; color: var(--accent-purple);"></i>
+                    <h3 class="disease-title">3. Anemia & Oxygenation Profile</h3>
+                  </div>
+                  <span class="risk-pill LOW" id="anemiaPill">LOW RISK</span>
+                </div>
+
+                <div class="disease-score-row">
+                  <div class="progress-track">
+                    <div class="progress-bar" id="anemiaBar" style="width: 15%; background: var(--accent-emerald);"></div>
+                  </div>
+                  <span class="score-text" id="anemiaScore">15%</span>
+                </div>
+
+                <ul class="evidence-bullet-list" id="anemiaEvidence">
+                  <li>Hemoglobin concentration within normal limits (14.2 g/dL)</li>
+                </ul>
+
+                <div class="recommendation-box" id="anemiaRec">
+                  <strong>Clinical Action:</strong> Normal physiological hemoglobin concentration.
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 5. Hospital Referral & Transfer Action -->
+            <div class="referral-card">
+              <div class="referral-info">
+                <h3 id="referralTitle">Emergency Hospital Referral Required</h3>
+                <p id="referralSubtitle">High cardiac risk or arrhythmia pattern detected. Direct patient to Department of Cardiology immediately.</p>
+              </div>
+              <button class="btn btn-referral-action" id="btnOpenHospitalModal">
+                <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+                <span>Dispatch Referral</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ==================== MODALS & SIDEBAR VIEWS ==================== -->
+
+  <!-- 1. PAST RECORDS MODAL -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 700;">📜 Past Screening Records & Outputs</h3>
+        <button class="close-btn" data-close="historyModal">&times;</button>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Stored locally in your browser</span>
+        <button class="btn btn-sm" id="btnClearHistory">Clear All Records</button>
+      </div>
+      <div class="table-responsive">
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Patient Name</th>
+              <th>Age/Sex</th>
+              <th>Diabetes</th>
+              <th>Cardiac</th>
+              <th>Anemia</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. HOSPITAL INTEGRATION MODAL -->
+  <div class="modal-overlay" id="hospitalModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 700;">🏥 Hospital Referral & Integration</h3>
+        <button class="close-btn" data-close="hospitalModal">&times;</button>
+      </div>
+      <form id="hospitalIntegrationForm">
+        <div class="form-grid">
+          <div class="form-group col-2">
+            <label class="form-label">Affiliated Hospital Name</label>
+            <input type="text" id="hospName" class="form-input" value="Apollo Multi-Specialty Hospital" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Doctor Registration ID</label>
+            <input type="text" id="hospDocId" class="form-input" value="DOC-TN-84920" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Referral Ward</label>
+            <select id="hospWard" class="form-select">
+              <option value="cardiology" selected>Cardiology & CCU</option>
+              <option value="endocrinology">Endocrinology & Diabetology</option>
+              <option value="hematology">Hematology & Blood Disorders</option>
+              <option value="emergency">Emergency Trauma Ward</option>
+            </select>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-label">Emergency Dispatch Webhook / API Endpoint</label>
+            <input type="url" id="hospWebhook" class="form-input" value="https://hospital-api.apollo.org/v1/referrals/dispatch" />
+          </div>
+          <div class="form-group col-2">
+            <label class="form-label">Clinical Transfer Notes</label>
+            <textarea id="hospNotes" class="form-input" rows="3" style="resize: vertical;">Patient screened via CardioNav AI. Automated early-risk assessment flagged high cardiac irregularity. Fast-track admission recommended.</textarea>
+          </div>
+        </div>
+        <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
+          <button type="button" class="btn" data-close="hospitalModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+            <span>Confirm & Dispatch Transfer</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. SETTINGS MODAL -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-content modal-sm">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 700;">⚙️ Application Settings</h3>
+        <button class="close-btn" data-close="settingsModal">&times;</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group">
+          <label class="form-label">Color Theme</label>
+          <div style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
+            <button class="btn" id="btnSetLight" style="flex: 1; justify-content: center;">☀️ Light Mode</button>
+            <button class="btn" id="btnSetDark" style="flex: 1; justify-content: center;">🌙 Dark Mode</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Heartbeat Audio Effect</label>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background: var(--bg-card-secondary); border-radius: var(--radius-md);">
+            <span style="font-size: 0.85rem;">Audio beep on systolic pulse</span>
+            <button class="btn btn-sm" id="btnToggleSoundSetting">Enable</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Sensor Stream Source</label>
+          <select id="sensorStreamSource" class="form-select">
+            <option value="simulated" selected>Interactive Real-Time Waveform Simulator</option>
+            <option value="websocket">Live ESP32 Stream (ws://localhost:8000/ws/sensor)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ABOUT US MODAL (TEAM REALLY UNIQUE) -->
+  <div class="modal-overlay" id="aboutModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 700;">👥 About Us — Team Really Unique</h3>
+        <button class="close-btn" data-close="aboutModal">&times;</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+        <strong>CardioNav AI</strong> is designed and engineered by <strong>Team Really Unique</strong> as an AI-powered multi-disease early risk detection platform combining optical PPG sensing with clinical decision support.
+      </p>
+      
+      <div class="team-grid">
+        <div class="team-member-card">
+          <div class="team-member-avatar">MV</div>
+          <div class="team-member-name">M VINAYAK</div>
+          <div class="team-member-role">Full-Stack & Frontend Architecture</div>
+        </div>
+
+        <div class="team-member-card">
+          <div class="team-member-avatar">SS</div>
+          <div class="team-member-name">SAM SANTIAGO</div>
+          <div class="team-member-role">Machine Learning & Signal Processing</div>
+        </div>
+
+        <div class="team-member-card">
+          <div class="team-member-avatar">TH</div>
+          <div class="team-member-name">THORANA</div>
+          <div class="team-member-role">Clinical LLM & Diagnostic Models</div>
+        </div>
+
+        <div class="team-member-card">
+          <div class="team-member-avatar">AN</div>
+          <div class="team-member-name">ANYATHA</div>
+          <div class="team-member-role">Backend & Hospital Integration</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. CONTACT US MODAL -->
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal-content modal-sm">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 700;">📞 Contact Us</h3>
+        <button class="close-btn" data-close="contactModal">&times;</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        Need clinical support, hospital onboarding, or technical assistance with CardioNav AI? Send a message to <strong>Team Really Unique</strong>:
+      </p>
+
+      <form id="contactForm" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div class="form-group">
+          <label class="form-label" for="contactName">Your Name / Hospital</label>
+          <input type="text" id="contactName" class="form-input" placeholder="e.g. Dr. Ramesh / Apollo Hospital" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contactEmail">Email Address</label>
+          <input type="email" id="contactEmail" class="form-input" placeholder="name@hospital.org" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contactMessage">Message / Inquiry</label>
+          <textarea id="contactMessage" class="form-input" rows="3" placeholder="Enter your clinical inquiry or integration request..." style="resize: vertical;" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="justify-content: center; margin-top: 0.25rem;">
+          <i data-lucide="send" style="width: 15px; height: 15px;"></i>
+          <span>Send Message</span>
+        </button>
+      </form>
+
+      <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.35rem;">
+        <div>📧 <strong>Official Email:</strong> support@reallyunique.ai</div>
+        <div>📍 <strong>Institution:</strong> Vellore Institute of Technology, India</div>
+        <div>⚡ <strong>Status:</strong> VITSIH-26 AI Clinical Decision Platform</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript App Controller -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

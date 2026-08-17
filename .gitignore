@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Environment & Secrets (Never commit secrets to GitHub)
+.env
+.env.local
+.env.*.local
+
+# Pytest & Test Caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Operating System & IDE Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# LLM Checkpoint Weights
+llm/checkpoints/*
+!llm/checkpoints/.gitkeep
